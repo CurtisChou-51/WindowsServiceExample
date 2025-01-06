@@ -13,8 +13,10 @@ namespace WindowsServiceExample
             });
             builder.Services.AddControllers();
             builder.Services.AddHostedService<ExampleBackgroundService>();
-            builder.Services.AddSingleton<IBgShellService, Example1ShellService>();
-            builder.Services.AddSingleton<IBgShellService, Example2ShellService>();
+            builder.Services.AddSingleton<IBgShellService, Example1BgShellService>();
+            builder.Services.AddSingleton<IBgShellService, Example2BgShellService>();
+            builder.Services.AddScoped<Example1Service>();
+            builder.Services.AddScoped<Example2Service>();
 
             var app = builder.Build();
             app.UseHttpsRedirection();
