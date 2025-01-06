@@ -1,12 +1,12 @@
 ﻿
 namespace WindowsServiceExample.Services
 {
-    public class Example2ShellService : IBgShellService
+    public class Example2BgShellService : IBgShellService
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly SemaphoreSlim _semaphoreSlim;
 
-        public Example2ShellService(IServiceProvider serviceProvider)
+        public Example2BgShellService(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
             _semaphoreSlim = new(1);
@@ -35,7 +35,6 @@ namespace WindowsServiceExample.Services
         /// <summary> 執行 </summary>
         private Task ExecuteImpl()
         {
-
             return Task.CompletedTask;
         }
     }
