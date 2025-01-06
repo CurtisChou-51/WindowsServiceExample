@@ -18,11 +18,11 @@ namespace WindowsServiceExample.Services
             if (!_semaphoreSlim.Wait(0))
                 return false;
 
-            _ = Task.Run(async () =>
+            _ = Task.Run(() =>
             {
                 try
                 {
-                    await ExecuteImpl();
+                    ExecuteImpl();
                 }
                 finally
                 {
@@ -33,10 +33,11 @@ namespace WindowsServiceExample.Services
         }
 
         /// <summary> 執行 </summary>
-        private Task ExecuteImpl()
+        private void ExecuteImpl()
         {
-
-            return Task.CompletedTask;
+            using var scope = _serviceProvider.CreateScope();
+            var service = scope.ServiceProvider.GetRequiredService<Example1Service>();
+            service.Execute();
         }
     }
 }

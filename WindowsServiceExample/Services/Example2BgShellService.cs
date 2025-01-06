@@ -35,7 +35,9 @@ namespace WindowsServiceExample.Services
         /// <summary> 執行 </summary>
         private Task ExecuteImpl()
         {
-            return Task.CompletedTask;
+            using var scope = _serviceProvider.CreateScope();
+            var service = scope.ServiceProvider.GetRequiredService<Example2Service>();
+            return service.ExecuteAsync();
         }
     }
 }
