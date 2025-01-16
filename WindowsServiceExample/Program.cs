@@ -13,10 +13,15 @@ namespace WindowsServiceExample
             });
             builder.Services.AddControllers();
             builder.Services.AddHostedService<ExampleBackgroundService>();
-            builder.Services.AddSingleton<IBgShellService, Example1BgShellService>();
-            builder.Services.AddSingleton<IBgShellService, Example2BgShellService>();
-            builder.Services.AddScoped<Example1Service>();
-            builder.Services.AddScoped<Example2Service>();
+            builder.Services.AddSingleton<IScheduledServiceShell, Example1ServiceShell>();
+            builder.Services.AddSingleton<IScheduledServiceShell, Example2ServiceShell>();
+            builder.Services.AddScoped<IExample1Service, Example1Service>();
+            builder.Services.AddScoped<IExample2Service, Example2Service>();
+            builder.Services.AddLogging(configure =>
+            {
+                configure.AddConsole();
+                configure.AddFilter("System.Net.Http", LogLevel.Warning);
+            });
 
             var app = builder.Build();
             app.UseHttpsRedirection();
