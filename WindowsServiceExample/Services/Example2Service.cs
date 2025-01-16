@@ -1,10 +1,20 @@
 ﻿namespace WindowsServiceExample.Services
 {
-    public class Example2Service
+    public class Example2Service : IExample2Service
     {
-        public async Task ExecuteAsync()
+        private readonly ILogger _logger;
+
+        public Example2Service(ILogger<Example2Service> logger)
         {
-            // Do something
+            _logger = logger;
+        }
+
+        public async Task Execute()
+        {
+            _logger.LogInformation("Execution started.");
+
+
+            _logger.LogInformation("Execution finished.");
         }
     }
 }

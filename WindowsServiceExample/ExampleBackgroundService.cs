@@ -5,12 +5,12 @@ namespace WindowsServiceExample
     public class ExampleBackgroundService : BackgroundService
     {
         private readonly ILogger<ExampleBackgroundService> _logger;
-        private readonly IEnumerable<IBgShellService> _bgShellServices;
+        private readonly IEnumerable<IScheduledServiceShell> _scheduledServiceShells;
 
-        public ExampleBackgroundService(ILogger<ExampleBackgroundService> logger, IEnumerable<IBgShellService> bgShellServices)
+        public ExampleBackgroundService(ILogger<ExampleBackgroundService> logger, IEnumerable<IScheduledServiceShell> scheduledServiceShells)
         {
             _logger = logger;
-            _bgShellServices = bgShellServices;
+            _scheduledServiceShells = scheduledServiceShells;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -19,8 +19,11 @@ namespace WindowsServiceExample
             {
                 while (!stoppingToken.IsCancellationRequested)
                 {
-                    foreach (var bgShellService in _bgShellServices)
-                        bgShellService.Execute();
+                    foreach (var scheduledServiceShell in _scheduledServiceShells)
+                    {
+                        if (scheduledServiceShell.IsScheduled(DateTimeOffset.Now))
+                            scheduledServiceShell.InvokeService();
+                    }
                     await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
                 }
             }
