@@ -38,9 +38,6 @@ namespace WindowsServiceExample.Services
 
         public virtual bool IsScheduled(DateTimeOffset from)
         {
-            // todo
-            // CronExpression expression = CronExpression.Parse("*/5 * * * *");
-            // DateTimeOffset? next = expression.GetNextOccurrence(from, TimeZoneInfo.Local);
             return true;
         }
 
