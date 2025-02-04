@@ -1,4 +1,4 @@
-using WindowsServiceExample.Services;
+﻿using WindowsServiceExample.Services;
 using WindowsServiceExample.Services.Example1;
 using WindowsServiceExample.Services.Example2;
 
