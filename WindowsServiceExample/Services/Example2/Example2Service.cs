@@ -1,10 +1,10 @@
-﻿namespace WindowsServiceExample.Services
+﻿namespace WindowsServiceExample.Services.Example2
 {
-    public class Example1Service : IExample1Service
+    public class Example2Service : IExample2Service
     {
         private readonly ILogger _logger;
 
-        public Example1Service(ILogger<Example1Service> logger)
+        public Example2Service(ILogger<Example2Service> logger)
         {
             _logger = logger;
         }
