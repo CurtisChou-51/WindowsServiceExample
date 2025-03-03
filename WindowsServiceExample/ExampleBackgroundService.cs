@@ -1,40 +1,67 @@
-﻿using WindowsServiceExample.Services;
+﻿using Quartz;
+using Quartz.Spi;
+using WindowsServiceExample.Dtos;
+using WindowsServiceExample.Services.Example1;
 
 namespace WindowsServiceExample
 {
     public class ExampleBackgroundService : BackgroundService
     {
         private readonly ILogger<ExampleBackgroundService> _logger;
-        private readonly IEnumerable<IScheduledServiceShell> _scheduledServiceShells;
+        private readonly ISchedulerFactory _schedulerFactory;
+        private readonly IJobFactory _jobFactory;
 
-        public ExampleBackgroundService(ILogger<ExampleBackgroundService> logger, IEnumerable<IScheduledServiceShell> scheduledServiceShells)
+        public ExampleBackgroundService(ILogger<ExampleBackgroundService> logger, ISchedulerFactory schedulerFactory, IJobFactory jobFactory)
         {
             _logger = logger;
-            _scheduledServiceShells = scheduledServiceShells;
+            _schedulerFactory = schedulerFactory;
+            _jobFactory = jobFactory;
         }
 
-        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+        public async override Task StartAsync(CancellationToken cancellationToken)
         {
-            try
-            {
-                while (!stoppingToken.IsCancellationRequested)
-                {
-                    foreach (var scheduledServiceShell in _scheduledServiceShells)
-                    {
-                        if (scheduledServiceShell.IsScheduled(DateTimeOffset.Now))
-                            scheduledServiceShell.InvokeService();
-                    }
-                    await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
-                }
-            }
-            catch (TaskCanceledException)
-            {
+            IScheduler scheduler = await _schedulerFactory.GetScheduler(cancellationToken);
+            scheduler.JobFactory = _jobFactory;
 
-            }
-            catch (Exception ex)
+            List<JobScheduleDto> jobScheduleDtos =
+            [
+                new JobScheduleDto { JobIdentity = "j1", JobName = "Example1", JobType = typeof(Example1Service), CronExpression = "0/5 * * * * ?" }
+            ];
+            foreach (JobScheduleDto jobScheduleDto in jobScheduleDtos)
             {
-                _logger.LogError(ex, "{Message}", ex.Message);
+                IJobDetail jobDetail = CreateJobDetail(jobScheduleDto);
+                ITrigger trigger = CreateTrigger(jobScheduleDto);
+                await scheduler.ScheduleJob(jobDetail, trigger, cancellationToken);
             }
+            await scheduler.Start(cancellationToken);
+        }
+
+        protected override Task ExecuteAsync(CancellationToken stoppingToken)
+        {
+            return Task.CompletedTask;
+        }
+
+        private static IJobDetail CreateJobDetail(JobScheduleDto jobScheduleDto)
+        {
+            Type jobType = jobScheduleDto.JobType;
+            IJobDetail jobDetail = JobBuilder
+                .Create(jobType)
+                .WithIdentity(jobScheduleDto.JobIdentity)
+                .WithDescription(jobScheduleDto.JobName)
+                .Build();
+
+            jobDetail.JobDataMap.Put("Payload", jobScheduleDto);
+            return jobDetail;
+        }
+
+        private static ITrigger CreateTrigger(JobScheduleDto jobScheduleDto)
+        {
+            return TriggerBuilder
+                .Create()
+                .WithIdentity($"{jobScheduleDto.JobIdentity}.trigger")
+                .WithCronSchedule(jobScheduleDto.CronExpression)
+                .WithDescription(jobScheduleDto.CronExpression)
+                .Build();
         }
     }
 }
