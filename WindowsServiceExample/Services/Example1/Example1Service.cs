@@ -1,6 +1,9 @@
-﻿namespace WindowsServiceExample.Services.Example1
+﻿using Quartz;
+
+namespace WindowsServiceExample.Services.Example1
 {
-    public class Example1Service : IExample1Service
+    [DisallowConcurrentExecution]
+    public class Example1Service : IJob
     {
         private readonly ILogger _logger;
 
@@ -9,12 +12,11 @@
             _logger = logger;
         }
 
-        public async Task Execute()
+        public Task Execute(IJobExecutionContext context)
         {
-            _logger.LogInformation("Execution started.");
-
-
-            _logger.LogInformation("Execution finished.");
+            //var schedule = context.JobDetail.JobDataMap.Get("Payload") as JobSchedule;
+            _logger.LogInformation($"{DateTime.Now:HH:mm:ss} - Example1Service - start");
+            return Task.CompletedTask;
         }
     }
 }

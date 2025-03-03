@@ -1,4 +1,6 @@
-﻿using WindowsServiceExample.Services;
+﻿using Quartz.Impl;
+using Quartz.Spi;
+using Quartz;
 using WindowsServiceExample.Services.Example1;
 using WindowsServiceExample.Services.Example2;
 
@@ -9,16 +11,18 @@ namespace WindowsServiceExample
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            var configuration = builder.Configuration;
             builder.Host.UseWindowsService(option =>
             {
                 option.ServiceName = "WindowsServiceExample";
             });
             builder.Services.AddControllers();
+            builder.Services.AddSingleton<IJobFactory, JobFactory>();
+            builder.Services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
+
             builder.Services.AddHostedService<ExampleBackgroundService>();
-            builder.Services.AddSingleton<IScheduledServiceShell, Example1ServiceShell>();
-            builder.Services.AddSingleton<IScheduledServiceShell, Example2ServiceShell>();
-            builder.Services.AddScoped<IExample1Service, Example1Service>();
-            builder.Services.AddScoped<IExample2Service, Example2Service>();
+            builder.Services.AddSingleton<Example1Service>();
+            builder.Services.AddSingleton<Example2Service>();
             builder.Services.AddLogging(configure =>
             {
                 configure.AddConsole();
