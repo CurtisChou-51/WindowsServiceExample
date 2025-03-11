@@ -18,7 +18,21 @@ namespace WindowsServiceExample
             _jobFactory = jobFactory;
         }
 
-        public async override Task StartAsync(CancellationToken cancellationToken)
+        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+        {
+            try
+            {
+                await StartScheduler(stoppingToken);
+                while (!stoppingToken.IsCancellationRequested)
+                    await Task.Delay(1000, stoppingToken);
+            }
+            catch (TaskCanceledException ex)
+            {
+                _logger.LogError(ex, "Error occurred during execution");
+            }
+        }
+
+        private async Task StartScheduler(CancellationToken cancellationToken)
         {
             IScheduler scheduler = await _schedulerFactory.GetScheduler(cancellationToken);
             scheduler.JobFactory = _jobFactory;
@@ -34,11 +48,6 @@ namespace WindowsServiceExample
                 await scheduler.ScheduleJob(jobDetail, trigger, cancellationToken);
             }
             await scheduler.Start(cancellationToken);
-        }
-
-        protected override Task ExecuteAsync(CancellationToken stoppingToken)
-        {
-            return Task.CompletedTask;
         }
 
         private static IJobDetail CreateJobDetail(JobScheduleDto jobScheduleDto)
