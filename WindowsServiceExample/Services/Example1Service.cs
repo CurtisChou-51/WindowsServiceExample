@@ -1,6 +1,7 @@
 ﻿using Quartz;
+using WindowsServiceExample.Dtos;
 
-namespace WindowsServiceExample.Services.Example1
+namespace WindowsServiceExample.Services
 {
     [DisallowConcurrentExecution]
     public class Example1Service : IJob
@@ -14,8 +15,8 @@ namespace WindowsServiceExample.Services.Example1
 
         public Task Execute(IJobExecutionContext context)
         {
-            //var schedule = context.JobDetail.JobDataMap.Get("Payload") as JobSchedule;
-            _logger.LogInformation($"{DateTime.Now:HH:mm:ss} - Example1Service - start");
+            JobScheduleDto? jobScheduleDto = context.JobDetail.JobDataMap.Get("Payload") as JobScheduleDto;
+            _logger.LogInformation($"{DateTime.Now:HH:mm:ss} - {jobScheduleDto?.JobName} - start");
             return Task.CompletedTask;
         }
     }
