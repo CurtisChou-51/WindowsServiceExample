@@ -14,8 +14,8 @@ namespace WindowsServiceExample
 
         public IJob NewJob(TriggerFiredBundle bundle, IScheduler scheduler)
         {
-            var jobType = bundle.JobDetail.JobType;
-            return _serviceProvider.GetRequiredService(jobType) as IJob;
+            Type jobType = bundle.JobDetail.JobType;
+            return _serviceProvider.GetRequiredService(jobType) as IJob ?? throw new InvalidOperationException($"Could not create job {jobType}");
         }
 
         public void ReturnJob(IJob job)
