@@ -1,7 +1,7 @@
 ﻿using Quartz;
 using Quartz.Spi;
 using WindowsServiceExample.Dtos;
-using WindowsServiceExample.Services.Example1;
+using WindowsServiceExample.Services;
 
 namespace WindowsServiceExample
 {

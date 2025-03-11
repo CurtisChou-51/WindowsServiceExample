@@ -1,8 +1,7 @@
 ﻿using Quartz;
 using Quartz.Impl;
 using Quartz.Spi;
-using WindowsServiceExample.Services.Example1;
-using WindowsServiceExample.Services.Example2;
+using WindowsServiceExample.Services;
 
 namespace WindowsServiceExample
 {
