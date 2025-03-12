@@ -39,7 +39,7 @@ namespace WindowsServiceExample
 
             List<JobScheduleDto> jobScheduleDtos =
             [
-                new JobScheduleDto { JobIdentity = "j1", JobName = "Example1", JobType = typeof(Example1Service), CronExpression = "0/5 * * * * ?" }
+                new JobScheduleDto(jobIdentity: "j1", jobName : "Example1", jobType: typeof(Example1Service), cronExpression : "0/5 * * * * ?")
             ];
             foreach (JobScheduleDto jobScheduleDto in jobScheduleDtos)
             {
