@@ -2,7 +2,7 @@
 setlocal
 
 set project_path=..\WindowsServiceExample
-set publish_path=D:\WindowsServiceExample_Publish\WindowsServiceExample
+set publish_path=D:\WindowsServiceExample_Publish\publish
 set configuration=Release
 
 dotnet publish %project_path% -c %configuration% -o %publish_path%
