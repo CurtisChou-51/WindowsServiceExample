@@ -10,6 +10,7 @@
     <PackageReference Include="Cronos" Version="0.9.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.1" />
     <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="8.0.1" />
+    <PackageReference Include="NLog.Web.AspNetCore" Version="5.4.0" />
     <PackageReference Include="Quartz.AspNetCore" Version="3.13.1" />
   </ItemGroup>
 

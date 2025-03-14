@@ -1,4 +1,5 @@
-﻿using Quartz;
+﻿using NLog.Extensions.Logging;
+using Quartz;
 using Quartz.Impl;
 using Quartz.Spi;
 using WindowsServiceExample.Services;
@@ -24,8 +25,9 @@ namespace WindowsServiceExample
             builder.Services.AddSingleton<Example2Service>();
             builder.Services.AddLogging(configure =>
             {
+                configure.ClearProviders();
                 configure.AddConsole();
-                configure.AddFilter("System.Net.Http", LogLevel.Warning);
+                configure.AddNLog();
             });
 
             var app = builder.Build();
