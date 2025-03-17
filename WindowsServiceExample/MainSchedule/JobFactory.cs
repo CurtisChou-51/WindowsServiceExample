@@ -1,7 +1,7 @@
 ﻿using Quartz.Spi;
 using Quartz;
 
-namespace WindowsServiceExample
+namespace WindowsServiceExample.MainSchedule
 {
     public class JobFactory : IJobFactory
     {
