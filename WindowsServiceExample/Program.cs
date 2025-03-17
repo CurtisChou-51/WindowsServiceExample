@@ -2,6 +2,7 @@
 using Quartz;
 using Quartz.Impl;
 using Quartz.Spi;
+using WindowsServiceExample.MainSchedule;
 using WindowsServiceExample.Services;
 
 namespace WindowsServiceExample
@@ -20,7 +21,7 @@ namespace WindowsServiceExample
             builder.Services.AddSingleton<IJobFactory, JobFactory>();
             builder.Services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
 
-            builder.Services.AddHostedService<ExampleBackgroundService>();
+            builder.Services.AddHostedService<MainBackgroundService>();
             builder.Services.AddSingleton<Example1Service>();
             builder.Services.AddSingleton<Example2Service>();
             builder.Services.AddLogging(configure =>
