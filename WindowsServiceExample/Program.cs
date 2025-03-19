@@ -21,7 +21,8 @@ namespace WindowsServiceExample
             builder.Services.AddSingleton<IJobFactory, JobFactory>();
             builder.Services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
 
-            builder.Services.AddHostedService<MainBackgroundService>();
+            builder.Services.AddSingleton<MainBackgroundService>();
+            builder.Services.AddHostedService(provider => provider.GetService<MainBackgroundService>()!);
             builder.Services.AddSingleton<Example1Service>();
             builder.Services.AddSingleton<Example2Service>();
             builder.Services.AddLogging(configure =>

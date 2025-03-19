@@ -10,6 +10,7 @@ namespace WindowsServiceExample.MainSchedule
         private readonly ILogger<MainBackgroundService> _logger;
         private readonly ISchedulerFactory _schedulerFactory;
         private readonly IJobFactory _jobFactory;
+        private readonly List<JobScheduleDto> _jobScheduleDtos;
         private IScheduler? _scheduler;
 
         public MainBackgroundService(ILogger<MainBackgroundService> logger, ISchedulerFactory schedulerFactory, IJobFactory jobFactory)
@@ -17,6 +18,11 @@ namespace WindowsServiceExample.MainSchedule
             _logger = logger;
             _schedulerFactory = schedulerFactory;
             _jobFactory = jobFactory;
+            _jobScheduleDtos =
+            [
+                new JobScheduleDto(jobIdentity: "j1", jobName : "Example1", jobType: typeof(Example1Service), cronExpression : "0/5 * * * * ?"),
+                new JobScheduleDto(jobIdentity: "j2", jobName : "Example2", jobType: typeof(Example2Service), cronExpression : "0/20 * * * * ?")
+            ];
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -38,18 +44,32 @@ namespace WindowsServiceExample.MainSchedule
             _scheduler = await _schedulerFactory.GetScheduler(cancellationToken);
             _scheduler.JobFactory = _jobFactory;
 
-            List<JobScheduleDto> jobScheduleDtos =
-            [
-                new JobScheduleDto(jobIdentity: "j1", jobName : "Example1", jobType: typeof(Example1Service), cronExpression : "0/5 * * * * ?"),
-                new JobScheduleDto(jobIdentity: "j2", jobName : "Example2", jobType: typeof(Example2Service), cronExpression : "0/20 * * * * ?")
-            ];
-            foreach (JobScheduleDto jobScheduleDto in jobScheduleDtos)
+            foreach (JobScheduleDto jobScheduleDto in _jobScheduleDtos)
             {
                 IJobDetail jobDetail = CreateJobDetail(jobScheduleDto);
                 ITrigger trigger = CreateTrigger(jobScheduleDto);
                 await _scheduler.ScheduleJob(jobDetail, trigger, cancellationToken);
             }
             await _scheduler.Start(cancellationToken);
+        }
+
+        public async Task<List<JobStatusViewModel>> QueryJobsStatus()
+        {
+            var currentJobs = await GetCurrentJobs();
+            string[] currentJobIds = currentJobs.Select(job => job.JobDetail.Key.Name).ToArray();
+            return _jobScheduleDtos.Select(x => 
+                new JobStatusViewModel
+                {
+                    JobIdentity = x.JobIdentity,
+                    JobName = x.JobName,
+                    IsRunning = currentJobIds.Contains(x.JobIdentity),
+                    CronExpression = x.CronExpression,
+                }).ToList();
+        }
+
+        private async Task<IReadOnlyCollection<IJobExecutionContext>> GetCurrentJobs()
+        {
+            return _scheduler is null || _scheduler.IsShutdown ? [] : await _scheduler.GetCurrentlyExecutingJobs();
         }
 
         private static IJobDetail CreateJobDetail(JobScheduleDto jobScheduleDto)
