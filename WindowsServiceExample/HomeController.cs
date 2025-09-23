@@ -22,5 +22,11 @@ namespace WindowsServiceExample
             var result = await _mainBackgroundService.QueryJobsStatus();
             return Ok(result);
         }
+
+        public IActionResult TriggerJob(string jobIdentity)
+        {
+            _mainBackgroundService.TriggerJob(jobIdentity);
+            return Ok();
+        }
     }
 }
