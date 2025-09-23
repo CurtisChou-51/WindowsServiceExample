@@ -67,6 +67,11 @@ namespace WindowsServiceExample.MainSchedule
                 }).ToList();
         }
 
+        public void TriggerJob(string jobIdentity)
+        {
+            _scheduler?.TriggerJob(new JobKey(jobIdentity));
+        }
+
         private async Task<IReadOnlyCollection<IJobExecutionContext>> GetCurrentJobs()
         {
             return _scheduler is null || _scheduler.IsShutdown ? [] : await _scheduler.GetCurrentlyExecutingJobs();
