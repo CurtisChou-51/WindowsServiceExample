@@ -2,9 +2,9 @@
 {
     public class JobStatusViewModel
     {
-        public string JobIdentity { get; set; }
-        public string JobName { get; set; }
-        public string CronExpression { get; set; }
+        public required string JobIdentity { get; init; }
+        public required string JobName { get; init; }
+        public required string CronExpression { get; init; }
         public bool IsRunning { get; set; }
     }
 
