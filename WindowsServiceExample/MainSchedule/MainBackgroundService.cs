@@ -20,8 +20,8 @@ namespace WindowsServiceExample.MainSchedule
             _jobFactory = jobFactory;
             _jobScheduleDtos =
             [
-                new JobScheduleDto(jobIdentity: "j1", jobName : "Example1", jobType: typeof(Example1Service), cronExpression : "0/5 * * * * ?"),
-                new JobScheduleDto(jobIdentity: "j2", jobName : "Example2", jobType: typeof(Example2Service), cronExpression : "0/20 * * * * ?")
+                new JobScheduleDto(jobIdentity: "j1", jobName : "Example1", jobType: typeof(Example1Job), cronExpression : "0/5 * * * * ?"),
+                new JobScheduleDto(jobIdentity: "j2", jobName : "Example2", jobType: typeof(Example2Job), cronExpression : "0/20 * * * * ?")
             ];
         }
 
