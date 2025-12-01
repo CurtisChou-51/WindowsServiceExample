@@ -4,11 +4,11 @@ using WindowsServiceExample.Dtos;
 namespace WindowsServiceExample.Services
 {
     [DisallowConcurrentExecution]
-    public class Example1Service : IJob
+    public class Example2Job : IJob
     {
         private readonly ILogger _logger;
 
-        public Example1Service(ILogger<Example1Service> logger)
+        public Example2Job(ILogger<Example2Job> logger)
         {
             _logger = logger;
         }
@@ -17,7 +17,7 @@ namespace WindowsServiceExample.Services
         {
             JobScheduleDto? jobScheduleDto = context.JobDetail.JobDataMap.Get("Payload") as JobScheduleDto;
             _logger.LogInformation($"{DateTime.Now:HH:mm:ss} - {jobScheduleDto?.JobName} - start");
-            await Task.Delay(12000);
+            await Task.Delay(8000);
             _logger.LogInformation($"{DateTime.Now:HH:mm:ss} - {jobScheduleDto?.JobName} - end");
             return;
         }

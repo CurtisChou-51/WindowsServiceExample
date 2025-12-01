@@ -23,8 +23,8 @@ namespace WindowsServiceExample
 
             builder.Services.AddSingleton<MainBackgroundService>();
             builder.Services.AddHostedService(provider => provider.GetService<MainBackgroundService>()!);
-            builder.Services.AddSingleton<Example1Service>();
-            builder.Services.AddSingleton<Example2Service>();
+            builder.Services.AddSingleton<Example1Job>();
+            builder.Services.AddSingleton<Example2Job>();
             builder.Services.AddLogging(configure =>
             {
                 configure.ClearProviders();
