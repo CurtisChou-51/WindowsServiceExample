@@ -1,4 +1,5 @@
-﻿using NLog.Extensions.Logging;
+﻿using AsyncKeyedLock;
+using NLog.Extensions.Logging;
 using Quartz;
 using Quartz.Impl;
 using Quartz.Spi;
@@ -31,6 +32,8 @@ namespace WindowsServiceExample
                 configure.AddConsole();
                 configure.AddNLog();
             });
+
+            builder.Services.AddSingleton(new AsyncKeyedLocker<string>());
 
             var app = builder.Build();
             app.UseHttpsRedirection();
