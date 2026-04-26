@@ -3,8 +3,8 @@ using NLog.Extensions.Logging;
 using Quartz;
 using Quartz.Impl;
 using Quartz.Spi;
+using WindowsServiceExample.Jobs;
 using WindowsServiceExample.MainSchedule;
-using WindowsServiceExample.Services;
 
 namespace WindowsServiceExample
 {

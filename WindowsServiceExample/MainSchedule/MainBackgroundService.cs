@@ -1,7 +1,7 @@
 ﻿using Quartz;
 using Quartz.Spi;
 using WindowsServiceExample.Dtos;
-using WindowsServiceExample.Services;
+using WindowsServiceExample.Jobs;
 
 namespace WindowsServiceExample.MainSchedule
 {
